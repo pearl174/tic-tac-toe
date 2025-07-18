@@ -1,0 +1,21 @@
+body {
+    display: flex;
+    flex-direction: column;  
+    align-items: center;    
+}
+
+.board-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    height: 250px;
+    width: 250px;
+}
+
+.inputs {
+    display: flex;
+}
+
+.board-container > div {
+    border: 1px solid black;
+}
