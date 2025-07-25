@@ -31,4 +31,4 @@ const gameController = (function () {
     const player1 = players("A", "X");
     const player2 = players("B", "O");
 
-})
+})();
