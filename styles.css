@@ -16,6 +16,6 @@ body {
     display: flex;
 }
 
-.board-container > div {
+.cell {
     border: 1px solid black;
 }

@@ -22,14 +22,14 @@ const gameBoard = (function () {
         return board.every(row => row.every(cell => cell !== ""));
     }
 
-    return { createBoard, getBoard, changeBoard }
+    return { createBoard, getBoard, changeBoard, isBoardFull }
 }) ();
 
 const Player = (name, marker) => ({ name, marker });
 
 const gameController = (function () {
     gameBoard.createBoard();
-
+    // console.log(gameBoard.getBoard());
     const player1 = Player("A", "X");
     const player2 = Player("B", "O");
 
@@ -44,7 +44,8 @@ const gameController = (function () {
     const makeMove = (x, y) => {
         const board = gameBoard.getBoard();
         if (board[x][y] === "") {
-            board.changeBoard(x, y, getPlayerTurn().marker);
+            gameBoard.changeBoard(x, y, getPlayerTurn().marker);
+            switchPlayerTurn();
             return true;
         }
         else {
@@ -71,5 +72,46 @@ const gameController = (function () {
         }
         return "";
     }
-})
+    return { makeMove, checkTie, checkWin }
+}) ();
 
+const displayController = (function() {
+    const gameBoardContainer = document.querySelector(".board-container");
+
+    gameBoardContainer.addEventListener("click", (e) => {
+        if (!e.target.classList.contains("cell")) return;
+
+        const row = e.target.dataset.row;
+        const col = e.target.dataset.col;
+        gameController.makeMove(row, col);
+        renderBoard();
+        const winner = gameController.checkWin();
+        if (winner == "") {
+            if (gameController.checkTie() === true) {
+                alert("Game Over");
+            }
+            return;
+        }
+        alert(`${winner} has won!`);
+    });
+
+    const renderBoard = () => {
+        const board = gameBoard.getBoard();
+        const gameBoardContainer = document.querySelector(".board-container");
+        gameBoardContainer.innerHTML = "";
+
+        for (let i = 0; i < 3; i++) {
+            // const parentDiv = document.createElement("div"); // const here works as it is scoped only in the single iteration of the loop
+            for (let j = 0; j < 3; j++) {
+                const div = document.createElement("div");
+                div.textContent = board[i][j];
+                div.classList.add("cell");
+                div.dataset.row = i;
+                div.dataset.col = j;
+                // parentDiv.appendChild(div);
+                gameBoardContainer.appendChild(div);
+            }
+        }
+    }
+    renderBoard();
+}) ();
